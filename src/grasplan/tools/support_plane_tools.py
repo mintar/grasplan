@@ -128,8 +128,8 @@ def gen_place_poses_from_plane(object_class, support_object, plane, frame_id='ma
         object_pose_msg.class_id = object_class
         count = 0
         while 1:
-            candidate_x = round(random.uniform(plane[0].x, plane[1].x), 4)
-            candidate_y = round(random.uniform(plane[0].y, plane[3].y), 4)
+            candidate_x = round(random.uniform(plane[0].x, plane[3].x), 4)
+            candidate_y = round(random.uniform(plane[1].y, plane[0].y), 4)
             if support_object in ignore_min_dist_list:
                 rospy.logwarn(f'ignoring min dist param for object: {object_class}')
                 break
@@ -182,12 +182,12 @@ def reduce_plane_area(plane, distance):
     use animate_plane_points() function to make sure that the required order is followed
     '''
     plane[0].x -= distance
-    plane[0].y -= distance
-    plane[1].x += distance
+    plane[0].y += distance
+    plane[1].x -= distance
     plane[1].y -= distance
     plane[2].x += distance
-    plane[2].y += distance
-    plane[3].x -= distance
+    plane[2].y -= distance
+    plane[3].x += distance
     plane[3].y += distance
     return plane
 
@@ -207,13 +207,16 @@ def obj_to_plane(support_obj):
     generate a plane made out of 4 points from an object
     this is currently a workaround, however it can be taken from moveit planning scene in future
     '''
-    th = 0.721 # table_height, (real table height : 0.72)
+    th_square = 0.721 # table_height, (real table height : 0.72)
+    th_long = 0.716 # table_height, (real table height : 0.715)
     if support_obj == 'table_1':
-        return [Point(12.85, 1.50, th), Point(13.55, 1.50, th), Point(13.55, 2.90, th), Point(12.85, 2.90, th)]
+        return [Point(17.92, 15.58, th_square), Point(17.91, 14.78, th_square), Point(18.71, 14.77, th_square), Point(18.70, 15.57, th_square)]
     if support_obj == 'table_2':
-        return [Point(11.30, 2.89, th), Point(12.70, 2.89, th), Point(12.70, 3.59, th), Point(11.30, 3.59, th)]
+        return [Point(18.77, 14.14, th_long), Point(18.77, 13.36, th_long), Point(20.36, 13.36, th_long), Point(20.36, 14.14, th_long)]
     if support_obj == 'table_3':
-        return [Point(9.70, 2.89,th), Point(11.10, 2.89, th), Point(11.10, 3.59,th), Point(9.70, 3.59,th)]
+        return [Point(20.47, 14.19, th_long), Point(20.49, 13.41, th_long), Point(22.08, 13.46, th_long), Point(22.05, 14.25, th_long)]
+    if support_obj == 'table_4':
+        return [Point(22.34, 15.43, th_square), Point(22.32, 14.63, th_square), Point(23.11, 14.64, th_square), Point(23.10, 15.44, th_square)]
     if support_obj == 'klt':
         return [Point(0,0,0), Point(1,0,0), Point(1,1,0), Point(0,1,0)] # TODO
     return [None, None, None, None, None]

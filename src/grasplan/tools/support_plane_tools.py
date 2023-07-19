@@ -67,6 +67,8 @@ def gen_insert_poses_from_obj(object_class, support_object_pose, obj_height, fra
     # HACK: object specific rotations
     if object_class == 'power_drill_with_grip':
         roll = - math.pi / 2.0
+    if object_class == 'hot_glue_gun':
+        roll = - math.pi / 2.0
     pitch = 0.0
     yaw = 0.0
     if not same_orientation_as_support_obj:
